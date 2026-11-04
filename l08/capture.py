@@ -69,18 +69,36 @@ class Capture:
         if not self.pending:
             return
         self.output_dir.mkdir(parents=True, exist_ok=True)
-        for row in self.pending:
+        rows = list(self.pending)
+        # Persist every paid response before any fallible trace request. Drain
+        # each saved row now so __exit__ never tries exclusive creation twice.
+        for row in rows:
             request_id = (row.get("response") or {}).get("request_id")
-            if request_id:
-                if request_id not in self.traces:
-                    self.traces[request_id] = self.original("GET", f"/api/_test/traces/{request_id}")
+            if request_id in self.traces:
                 row["trace"] = self.traces[request_id]
             path = self.output_dir / f"{row['sequence']:06d}.json"
             # Refuse accidental evidence replacement across attempts/processes.
             with path.open("x", encoding="utf-8") as target:
                 json.dump(row, target, ensure_ascii=False, indent=2)
-        self.pending.clear()
+            self.pending.remove(row)
+        failures = []
+        for row in rows:
+            request_id = (row.get("response") or {}).get("request_id")
+            if not request_id or "trace" in row:
+                continue
+            try:
+                row["trace"] = self.original("GET", f"/api/_test/traces/{request_id}")
+            except Exception as exc:
+                row["trace_error"] = f"{type(exc).__name__}: {exc}"
+                failures.append(exc)
+            # This file was exclusively created by this flush, not another run.
+            path = self.output_dir / f"{row['sequence']:06d}.json"
+            with path.open("r+", encoding="utf-8") as target:
+                json.dump(row, target, ensure_ascii=False, indent=2)
+                target.truncate()
         self.traces.clear()
+        if failures:
+            raise failures[0]
 
 
 def run_l03(argv: list[str], output_dir: Path) -> int:
