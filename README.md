@@ -304,6 +304,8 @@ docker compose --profile host run --rm eval-host
 
 ## L08 / ДЗ_7 — Observability & Cost Report
 
+Публічний репозиторій ДЗ_7: [Dmitriy004/paypilot-hw07-observability](https://github.com/Dmitriy004/paypilot-hw07-observability), фінальні матеріали — у `main`.
+
 Цей репозиторій — окрема копія L03; попередні ДЗ та код стенду не змінено.
 Версії джерел і fixture clock: [source-manifest](l08/source-manifest.json).
 Локальний стенд має працювати через OpenRouter, підтримувати lesson-08 і віддавати повні трейси; ключ зберігається **тільки в локальному .env стенду**, не в цьому репозиторії.
