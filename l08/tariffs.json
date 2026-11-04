@@ -1,0 +1,28 @@
+{
+  "checked_on": "2026-11-04",
+  "source": "https://openrouter.ai/api/v1/models",
+  "units": "USD per token (API values, not per million)",
+  "models": {
+    "anthropic/claude-haiku-5.5": {
+      "prompt": 0.0000001,
+      "completion": 0.0000005,
+      "input_cache_read": 0.00000001,
+      "input_cache_write": 0.000000125,
+      "overrides": [{"min_prompt_tokens": 100000, "prompt": 0.0000005, "completion": 0.0000025,
+                     "input_cache_read": 0.00000005, "input_cache_write": 0.000000625}]
+    },
+    "google/gemini-2.5-flash": {
+      "prompt": 0.0000003,
+      "completion": 0.0000025,
+      "input_cache_read": 0.00000003,
+      "input_cache_write": 0.0000000833333333333333,
+      "internal_reasoning": 0.0000025
+    }
+  },
+  "notes": [
+    "Reasoning is a subset of output tokens, not an extra charge on top of completion tokens.",
+    "Gemini cache-write count is contained in cache-read count; subtract overlap before pricing.",
+    "Upstream kit Gemini cache_write_factor .3778 was updated to .2777777777777777 at input price .30 USD/M.",
+    "Haiku >=100k prompt tier is handled by aggregate.py; disclose if any measured prompt enters it."
+  ]
+}

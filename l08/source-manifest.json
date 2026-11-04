@@ -1,0 +1,10 @@
+{
+  "prepared_on": "2026-11-04",
+  "l03_commit": "7d0f5e7df63a9f3c198bc4368410a7bb61341286",
+  "l08_commit": "666e496c5d5d43f572cdba5ad1b589138dfdcb02",
+  "stand_commit": "74f1995ca8e8e64e4526e374535c2c4e71a2bde1",
+  "original_l05_sha256": "eeff1407ba34bedf1e25b66ed940fd6853023b4f4feb5eed7952121c03a89272",
+  "source": "../paypilot-l05-multiturn/l05_dialogs.jsonl",
+  "fixture_clock": "2026-09-15T10:00:00Z",
+  "compatibility": "Original L05 invariant assertions are not supported by stock L03. Preserve original input in l08/legacy-l05.jsonl; sets/l05_dialogs.jsonl uses supported budget views with identical user turns, plus an empty-tool case and legitimate account control. Do not claim legacy invariant verdicts."
+}

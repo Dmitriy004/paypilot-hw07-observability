@@ -1,0 +1,45 @@
+{
+  "model": "anthropic/claude-haiku-5.5",
+  "reasoning": "off",
+  "clock": "2026-09-15T10:00:00Z",
+  "phase": "exploratory-only",
+  "source_set_hash": "7b3d2a38ceac",
+  "final_set_sha256": "4c125924888fd3140a2a9d6f5117fb12f8a541100c4994ddda2237843d2e5182",
+  "clean_report": "reports/l05_dialogs-clean-20261104T172714.json",
+  "negative_calibration": {
+    "case": "CONV-H01-BUDGET",
+    "defect_report": "reports/l05_dialogs-lesson-08-20261104T172953.json",
+    "clean_tokens": [39496,36310,45950,41021,39597],
+    "defect_tokens": [43225,38145,37891,43333,43512],
+    "clean_median": 39597,
+    "defect_median": 43225,
+    "margin_percent": 20,
+    "threshold": 47517,
+    "clean_verdict": "PASS",
+    "defect_verdict": "PASS",
+    "conclusion": "20 percent misses D15; retained and disclosed, not called a valid detector."
+  },
+  "selected_calibration": {
+    "case": "CONV-H04-BUDGET",
+    "protocol": "l08/calibration-protocol-v2.md",
+    "defect_report": "reports/l05_dialogs-lesson-08-20261104T173347.json",
+    "clean_tokens": [44787,45281,45645,44337,44533],
+    "defect_tokens": [54083,53232,53301,53464,53626],
+    "clean_median": 44787,
+    "defect_median": 53464,
+    "margin_percent": 5,
+    "thresholds": [
+      {"name":"loose","tokens_total":59492,"clean_under":5,"clean_runs":5,"defect_under":5,"defect_runs":5,"clean_verdict":"PASS","defect_verdict":"PASS"},
+      {"name":"tight","tokens_total":43891,"clean_under":0,"clean_runs":5,"defect_under":0,"defect_runs":5,"clean_verdict":"FAIL","defect_verdict":"FAIL"},
+      {"name":"chosen","tokens_total":47027,"clean_under":5,"clean_runs":5,"defect_under":0,"defect_runs":5,"clean_verdict":"PASS","defect_verdict":"FAIL"}
+    ]
+  },
+  "final_token_budgets": {
+    "CONV-H01-BUDGET":47517,
+    "CONV-H02-BUDGET":63449,
+    "CONV-H03-BUDGET":22834,
+    "CONV-H04-BUDGET":47027,
+    "CONV-H05-BUDGET":41135
+  },
+  "holdout_started": false
+}

@@ -277,7 +277,7 @@ docker compose run --rm eval --set l05_dialogs --gate all --profile lesson-08
 
 | Змінна | Що це |
 |---|---|
-| `STAND_DIR` | шлях до каталогу `paypilot-stand`, за замовчуванням `../paypilot-stand`. Windows: `C:/paypilot/paypilot-stand` |
+| `STAND_DIR` | шлях до shared-стенду, за замовчуванням `../paypilot-stand-shared`; можна перевизначити локально. Windows: `C:/paypilot/paypilot-stand-shared` |
 | `EVAL_STAND_URL` | адреса стенду зсередини контейнера, за замовчуванням `http://host.docker.internal:8000`, див. нижче |
 | `JUDGE_MODEL` | модель-суддя для перевірок рівня 7, наприклад `claude-haiku-5-5`. Порожнє значення означає «судді немає»: кейс рівня 7 тоді падає з `judge not configured` |
 | `ANTHROPIC_API_KEY` | ключ судді, той самий, що в `.env` стенду |
@@ -301,6 +301,70 @@ Linux, стенд опублікований лише на `127.0.0.1`: `host.do
 ```bash
 docker compose --profile host run --rm eval-host
 ```
+
+## L08 / ДЗ_7 — Observability & Cost Report
+
+Цей репозиторій — окрема копія L03; попередні ДЗ та код стенду не змінено.
+Версії джерел і fixture clock: [source-manifest](l08/source-manifest.json).
+Локальний стенд має працювати через OpenRouter, підтримувати lesson-08 і віддавати повні трейси; ключ зберігається **тільки в локальному .env стенду**, не в цьому репозиторії.
+
+Модель цього набору зафіксована у compose: `anthropic/claude-haiku-5.5`, reasoning off.
+Для іншої моделі використовуйте `--settings`, але спочатку перезніміть token/time budgets: tokenizer і поведінка відрізняються.
+У цьому ДЗ oracle human означає автором заданий операційний бюджет, **не LLM judge**. Judge key не потрібен.
+
+### Відтворення з чистого клону
+
+Клон має бути поруч із `paypilot-stand-shared`; якщо шлях інший, задайте `STAND_DIR` у shell або необов'язковому локальному `.env`.
+Стенд доступний на localhost:8000 з fixture clock `2026-09-15T10:00:00Z`; Langfuse — локально на localhost:3000.
+
+```bash
+docker compose run --rm eval --set l05_dialogs --gate all --dry-run
+docker compose run --rm eval --set l05_dialogs --gate all --profile lesson-08
+docker compose run --rm eval --set l05_dialogs --gate all --profile clean
+```
+
+На Windows з Docker Desktop, якщо default context недоступний, додайте `--context desktop-linux` після `docker`.
+`--gate all` обов'язковий для обох типів кейсів. Daily містить empty-tool budget і легітимний account control; release — п'ять token-budget діалогів по п'ять повторів.
+Очікуваний assertion FAIL у defect-звіті дає exit code 1, але звіт має бути повністю записаний; ERROR — це не очікуваний результат.
+
+Compose entrypoint — `l08/capture.py`: він делегує незмінним `cli.py`/`runner.py` і зберігає повні /chat + trace у `l08/evidence/<UTC batch>/`.
+Трейси зчитуються після таймера попереднього діалогу, перед reset; HTTP-запити збору доказів не додаються до виміряної latency.
+Усі платні прогони послідовні. Обмежувач враховує попередні збережені provider costs і зупиняє нові виклики при $0.99 (резерв до погодженого $1).
+Не запускайте на цій самій БД інші eval одночасно. Звіти й evidence тут навмисно збережені як матеріали ДЗ; нові повтори також витрачатимуть ваш API-бюджет.
+
+### Власні кейси
+
+| ID | Походження | Перевірка | Gate / runs |
+|---|---|---|---|
+| CONV-H01-BUDGET | власний H01, 7 реплік | tokens_total | release /5 |
+| CONV-H02-BUDGET | власний H02, 10 реплік | tokens_total | release /5 |
+| CONV-H03-BUDGET | власний H03, 5 реплік | tokens_total | release /5 |
+| CONV-H04-BUDGET | власний H04, 7 реплік | tokens_total | release /5 |
+| CONV-H05-BUDGET | власний H05, 7 реплік | tokens_total | release /5 |
+| COST-H06-EMPTY | новий легітимний CUS-0003 empty result | identical_tool_calls_max=1 | daily /1 |
+| COST-CTRL-ACCOUNT | новий легітимний CUS-0004 account question | get_account викликається | daily /1 |
+
+Це п'ять бюджетних представлень власних L05-діалогів, один новий бюджетний сценарій і один функціональний контроль, а не сім нових незалежних діалогів.
+Початковий L05 збережено byte-identically у [legacy-l05.jsonl](l08/legacy-l05.jsonl).
+Його `invariant` / `engine:disputes` несумісні зі stock L03, тому старі memory-verdicts тут не заявляються. Репліки всіх п'яти діалогів не змінено.
+Перевірка виклику інструмента не доводить правильність тексту чи банківських даних — це окремий залишковий ризик.
+
+### Матеріали та локальні перевірки
+
+- [Звіт з трьох слайдів](l08/observability-cost-report.md) — підсумкові пороги, калібрування, рахунки n з m і посилання на прогони.
+- [Порожній універсальний шаблон](l08/observability-cost-report.template.md).
+- [Початковий прогноз](l08/prediction.md) і [протокол калібрування](l08/calibration-protocol.md), окремий коміт до платних викликів.
+- [B4: дві моделі](l08/b4.json), [B3: summarization](l08/b3.json), [первинна сесія Langfuse](l08/langfuse-session.json).
+- [Перевірені тарифи](l08/tariffs.json); зміна від upstream kit обмежена датою й Gemini cache-write price, grading logic не змінено.
+
+```bash
+python -m unittest discover -s l08 -p 'test_*.py' -v
+python l08/aggregate.py
+python l08/run_scenarios.py --scenario B4 --reasoning off --json l08/b4-new.json
+```
+
+Остання команда платна, перші дві — локальні. Не перезаписуйте збережений `b4.json`: новому експерименту дайте нове ім'я.
+Баланс, загальні витрати аккаунта та API-ключі не публікуються; приватні usage snapshots ігноруються через `l08/private/`.
 
 Змінні й команди в нього ті самі, що в `eval`. Стенд на іншому порту — у
 `.env` задай `EVAL_STAND_URL=http://127.0.0.1:<порт>`.

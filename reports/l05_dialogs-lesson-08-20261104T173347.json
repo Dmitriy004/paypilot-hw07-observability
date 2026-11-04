@@ -1,0 +1,70 @@
+{
+  "prompt_version": "base.v1",
+  "set_hash": "7b3d2a38ceac",
+  "profile": "lesson-08",
+  "judge_model": "not-used",
+  "rubric_version": "rubric.v1",
+  "elapsed": 78.1,
+  "set": "l05_dialogs",
+  "gate": "all",
+  "ran_at": "2026-11-04T17:33:47.247908+00:00",
+  "passed": 1,
+  "total": 1,
+  "skipped": 0,
+  "by_layer": {
+    "orchestration": {
+      "passed": 1,
+      "total": 1
+    }
+  },
+  "coverage": {
+    "cases": 1,
+    "layers": {
+      "orchestration": 1
+    },
+    "oracles": {
+      "human": 1
+    },
+    "sources": {
+      "plan": 1
+    },
+    "severities": {
+      "high": 1
+    },
+    "ladder_levels": [
+      2
+    ],
+    "gates": {
+      "release": 1
+    },
+    "human_oracle_pct": 100.0,
+    "severity_filled_pct": 100.0
+  },
+  "cases": [
+    {
+      "skipped": false,
+      "id": "CONV-H04-BUDGET",
+      "layer": "orchestration",
+      "oracle": "human",
+      "severity": "high",
+      "gate": "release",
+      "runs": 5,
+      "verdict": {
+        "passed": true,
+        "level": 2,
+        "assertion": "budget",
+        "detail": "per run: tokens [54083, 53232, 53301, 53464, 53626], identical calls [1, 1, 1, 1, 1], latency [14978, 14342, 14884, 18262, 14633]ms"
+      },
+      "answers": [
+        "You told me the disputable amount is exactly **240.00 EUR**.",
+        "You told me 240.00 EUR at the start of our conversation. Nothing has been filed.",
+        "You told me at the start that the amount you may dispute is exactly 240.00 EUR.",
+        "The amount you told me at the start is **240.00 EUR**.",
+        "The amount you told me at the start is EUR 240.00."
+      ],
+      "latency_ms": 14633,
+      "tokens": 34756,
+      "tool_calls": []
+    }
+  ]
+}

@@ -1,20 +1,22 @@
 x-eval: &eval
   image: python:3.12-slim
   working_dir: /course/solutions/evals
-  entrypoint: ["python", "cli.py"]
+  entrypoint: ["python", "l08/capture.py"]
   command: []
   env_file:
     - path: .env
       required: false
   volumes:
     - .:/course/solutions/evals
-    - ${STAND_DIR:-../paypilot-stand}/app:/course/app:ro
+    - ${STAND_DIR:-../paypilot-stand-shared}/app:/course/app:ro
 
 x-eval-env: &eval-env
   SET: ${SET:-l03}
   GATE: ${GATE:-daily}
   CASE: ${CASE:-}
   PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONUNBUFFERED: "1"
+  STAND_SETTINGS: '{"model":"anthropic/claude-haiku-5.5","reasoning":"off"}'
 
 services:
   eval:

@@ -1,0 +1,6 @@
+sets/*.jsonl text eol=lf
+l08/legacy-l05.jsonl -text whitespace=cr-at-eol
+*.py text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.yml text eol=lf

@@ -1,0 +1,13 @@
+{
+  "phase": "exploratory-before-holdout",
+  "from": "2026-11-04T17:03:49.3735199Z",
+  "to": "2026-11-04T17:37:10.6942174Z",
+  "provider_usage_delta_usd": 0.300936806,
+  "saved_response_provider_usd": 0.300949,
+  "saved_steps": 472,
+  "llm_calls": 967,
+  "summary_calls": 15,
+  "difference_usd": -0.00001219400000002091,
+  "source": "https://openrouter.ai/api/v1/key",
+  "account_totals_published": false
+}

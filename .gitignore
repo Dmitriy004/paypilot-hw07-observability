@@ -1,3 +1,6 @@
-reports/
 .env
 __pycache__/
+.idea/
+.serena/
+l08/private/
+*.log

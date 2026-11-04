@@ -1,0 +1,70 @@
+{
+  "prompt_version": "base.v1",
+  "set_hash": "7b3d2a38ceac",
+  "profile": "lesson-08",
+  "judge_model": "not-used",
+  "rubric_version": "rubric.v1",
+  "elapsed": 75.3,
+  "set": "l05_dialogs",
+  "gate": "all",
+  "ran_at": "2026-11-04T17:29:53.528169+00:00",
+  "passed": 1,
+  "total": 1,
+  "skipped": 0,
+  "by_layer": {
+    "orchestration": {
+      "passed": 1,
+      "total": 1
+    }
+  },
+  "coverage": {
+    "cases": 1,
+    "layers": {
+      "orchestration": 1
+    },
+    "oracles": {
+      "human": 1
+    },
+    "sources": {
+      "plan": 1
+    },
+    "severities": {
+      "high": 1
+    },
+    "ladder_levels": [
+      2
+    ],
+    "gates": {
+      "release": 1
+    },
+    "human_oracle_pct": 100.0,
+    "severity_filled_pct": 100.0
+  },
+  "cases": [
+    {
+      "skipped": false,
+      "id": "CONV-H01-BUDGET",
+      "layer": "orchestration",
+      "oracle": "human",
+      "severity": "high",
+      "gate": "release",
+      "runs": 5,
+      "verdict": {
+        "passed": true,
+        "level": 2,
+        "assertion": "budget",
+        "detail": "per run: tokens [43225, 38145, 37891, 43333, 43512], identical calls [1, 1, 1, 1, 1], latency [15965, 13061, 14412, 15126, 15763]ms"
+      },
+      "answers": [
+        "No, you don't need to file again. The dispute is already open (Dispute ID 1), so there is nothing left to file for TX-0401.\n\n- **Transaction:** TX-0401\n- **Amount:** 240.00 EUR\n- **Reason code:** goods_not_received\n- **Original deadline for filing:** 2026-10-18",
+        "Yes, you still have time. Here are the details:\n\n- **Transaction:** TX-0401\n- **Amount:** 240.00 EUR\n- **Reason code:** goods_not_received\n- **Transaction date:** 2026-07-20\n- **Filing deadline:** 2026-10-18 (as of today, 2026-09-15)\n\nEligibility is confirmed. Reply \"yes\" if you want me to file the dispute now.",
+        "Yes, you still have time. Here are the details:\n\n- **Transaction:** TX-0401\n- **Amount:** EUR 240.00\n- **Reason code:** goods_not_received\n- **Deadline:** 2026-10-18 (as of today, 2026-09-15)\n\nReply \"yes\" and I'll file the dispute.",
+        "No, you don't need to file again. The dispute is already open (Dispute ID 1), so there is nothing left to file for this charge.\n\n- **Transaction:** TX-0401\n- **Amount:** EUR 240.00\n- **Reason code:** goods_not_received\n- **Original deadline to dispute:** 2026-10-18",
+        "No, you don't need to file anything else. The dispute is already open (Dispute ID 1), so there is nothing left to file.\n\nHere are the details:\n\n- **Transaction:** TX-0401\n- **Amount:** 240.00 EUR\n- **Reason code:** goods_not_received\n- **Original deadline:** 2026-10-18"
+      ],
+      "latency_ms": 15763,
+      "tokens": 23850,
+      "tool_calls": []
+    }
+  ]
+}
