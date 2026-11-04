@@ -336,11 +336,11 @@ Compose entrypoint — `l08/capture.py`: він делегує незмінни�
 
 | ID | Походження | Перевірка | Gate / runs |
 |---|---|---|---|
-| CONV-H01-BUDGET | власний H01, 7 реплік | tokens_total | release /5 |
-| CONV-H02-BUDGET | власний H02, 10 реплік | tokens_total | release /5 |
-| CONV-H03-BUDGET | власний H03, 5 реплік | tokens_total | release /5 |
-| CONV-H04-BUDGET | власний H04, 7 реплік | tokens_total | release /5 |
-| CONV-H05-BUDGET | власний H05, 7 реплік | tokens_total | release /5 |
+| CONV-H01-BUDGET | власний H01, 7 реплік | tokens_total ≤47517 | release /5 |
+| CONV-H02-BUDGET | власний H02, 10 реплік | tokens_total ≤63449 | release /5 |
+| CONV-H03-BUDGET | власний H03, 5 реплік | tokens_total ≤33306 | release /5 |
+| CONV-H04-BUDGET | власний H04, 7 реплік | tokens_total ≤47027 | release /5 |
+| CONV-H05-BUDGET | власний H05, 7 реплік | tokens_total ≤41135 | release /5 |
 | COST-H06-EMPTY | новий легітимний CUS-0003 empty result | identical_tool_calls_max=1 | daily /1 |
 | COST-CTRL-ACCOUNT | новий легітимний CUS-0004 account question | get_account викликається | daily /1 |
 
@@ -349,12 +349,24 @@ Compose entrypoint — `l08/capture.py`: він делегує незмінни�
 Його `invariant` / `engine:disputes` несумісні зі stock L03, тому старі memory-verdicts тут не заявляються. Репліки всіх п'яти діалогів не змінено.
 Перевірка виклику інструмента не доводить правильність тексту чи банківських даних — це окремий залишковий ризик.
 
+Калібрування H04 на Haiku (по5 exploratory діалогів на умову; verdict за медіаною):
+
+| Поріг tokens_total | Clean median44787 | lesson-08 median53464 | Результат |
+|---|---|---|---|
+| Надто вільний59492 | PASS,5 з5 під порогом | PASS,5 з5 під порогом | D15 пропущено |
+| Надто тісний43891 | FAIL,0 з5 | FAIL,0 з5 | Clean false-positive |
+| Обраний47027: ceil(clean median×1.05) | PASS,5 з5 | FAIL,0 з5 | Збережено для незалежних holdout |
+
+Негативний H01 +20% і виправлення H03 за normal retrieval variance також збережено: [калібрування v1](l08/calibration.json), [v2](l08/calibration-v2.md). Це не універсальні пороги для іншої моделі.
+
 ### Матеріали та локальні перевірки
 
 - [Звіт з трьох слайдів](l08/observability-cost-report.md) — підсумкові пороги, калібрування, рахунки n з m і посилання на прогони.
 - [Порожній універсальний шаблон](l08/observability-cost-report.template.md).
 - [Початковий прогноз](l08/prediction.md) і [протокол калібрування](l08/calibration-protocol.md), окремий коміт до платних викликів.
+- [V1 forecast](l08/prediction-final.md), [пояснення H03 false-positive](l08/calibration-v2.md) і [фінальний V2 forecast](l08/prediction-v2.md): обидві версії збережено, в V2 змінено тільки H03 для нормального knowledge lookup; старі негативні прогони не вилучені.
 - [B4: дві моделі](l08/b4.json), [B3: summarization](l08/b3.json), [первинна сесія Langfuse](l08/langfuse-session.json).
+- Фінальний set_hash **e9cf3e571e17**: [clean 7/7](reports/l05_dialogs-clean-20261104T184110.json), [lesson-08 5/7](reports/l05_dialogs-lesson-08-20261104T183406.json), [чистий клон / команди / хронологія](l08/holdout.json). У defect упали рівно CONV-H04-BUDGET і COST-H06-EMPTY; легітимний контроль пройшов в обох умовах.
 - [Перевірені тарифи](l08/tariffs.json); зміна від upstream kit обмежена датою й Gemini cache-write price, grading logic не змінено.
 
 ```bash

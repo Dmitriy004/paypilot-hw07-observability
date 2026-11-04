@@ -1,0 +1,49 @@
+{
+  "version": "v2",
+  "date": "2026-11-04",
+  "clone_commit": "c1d056d72451f62c5145de9c959d044645f0fd21",
+  "clone_initial_git_status": "clean",
+  "clone_contains_private_env": false,
+  "forecast_commit": "c1d056d72451f62c5145de9c959d044645f0fd21",
+  "forecast_committed_at": "2026-11-04T18:27:14Z",
+  "set_sha256": "e9cf3e571e175b9c0d6c37a462032a229c7179ce3bfa35c00dbd66683e658d26",
+  "set_hash": "e9cf3e571e17",
+  "runtime_inputs_unchanged_after_both_runs": true,
+  "model": "anthropic/claude-haiku-5.5",
+  "reasoning": "off",
+  "fixture_clock": "2026-09-15T10:00:00Z",
+  "only_changed_setting_between_conditions": "profile",
+  "runs": [
+    {
+      "command": "docker --context desktop-linux compose run --rm eval --set l05_dialogs --gate all --profile lesson-08",
+      "first_chat_at": "2026-11-04T18:27:36.333116+00:00",
+      "report": "reports/l05_dialogs-lesson-08-20261104T183406.json",
+      "evidence_batch": "20261104T182722.518187Z",
+      "exit_code": 1,
+      "passed": 5,
+      "total": 7,
+      "failed_ids": ["CONV-H04-BUDGET", "COST-H06-EMPTY"],
+      "infrastructure_errors": 0,
+      "dialogs": 27,
+      "chat_steps": 182
+    },
+    {
+      "command": "docker --context desktop-linux compose run --rm eval --set l05_dialogs --gate all --profile clean",
+      "first_chat_at": "2026-11-04T18:34:30.454279+00:00",
+      "report": "reports/l05_dialogs-clean-20261104T184110.json",
+      "evidence_batch": "20261104T183424.817366Z",
+      "exit_code": 0,
+      "passed": 7,
+      "total": 7,
+      "failed_ids": [],
+      "infrastructure_errors": 0,
+      "dialogs": 27,
+      "chat_steps": 182
+    }
+  ],
+  "forecast_matches": {"clean": "7/7 case verdicts", "lesson-08": "7/7 case verdicts"},
+  "prior_attempts_retained": "V1 clean 6/7 H03 false-positive and all exploratory runs remain in reports/ and l08/evidence/; see calibration-v2.md.",
+  "post_run_stand_health": {"profile": "clean", "startup_profile": "clean", "provider": "openai", "active_defects": [], "trace_content": true},
+  "initial_env_file_changed": false,
+  "publication": "not authorized; local commits only"
+}

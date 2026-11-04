@@ -1,8 +1,11 @@
 """Independent hand-calculated prices and whole-dialogue accounting."""
 import unittest
+import json
+from pathlib import Path
+from tempfile import TemporaryDirectory
 
 try:
-    from aggregate import span_cost_usd, summarize_record, summarize_dialog, completed_report
+    from aggregate import span_cost_usd, summarize_record, summarize_dialog, completed_report, aggregate
 except ImportError:
     span_cost_usd = summarize_record = summarize_dialog = completed_report = None
 
@@ -56,6 +59,22 @@ class EvidenceTests(unittest.TestCase):
         self.assertTrue(completed_report(1, {"cases": [{"verdict": {"passed": False}}]}))
         self.assertFalse(completed_report(1, {"cases": [{"error": "HTTP 500"}]}))
         self.assertFalse(completed_report(2, None))
+
+    def test_failed_attempt_never_erases_known_spend(self):
+        # A later HTTP error cannot turn an earlier paid response into zero spend.
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            batch = root / "attempt"
+            batch.mkdir()
+            rows = [{"sequence": 1, "run": 1, "label": "case", "response": {
+                        "usage": {"provider_cost_usd": 0.01}}, "trace": {}},
+                    {"sequence": 2, "run": 1, "label": "case", "error": "HTTP 500"}]
+            for index, row in enumerate(rows):
+                (batch / f"{index}.json").write_text(json.dumps(row), encoding="utf-8")
+            result = aggregate(root)
+            self.assertIsNone(result["provider_usd"])
+            self.assertAlmostEqual(result["provider_usd_known"], 0.01)
+            self.assertEqual(result["missing_cost_steps"], 1)
 
 
 if __name__ == "__main__":

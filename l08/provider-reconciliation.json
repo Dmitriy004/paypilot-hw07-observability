@@ -1,13 +1,24 @@
 {
-  "phase": "exploratory-before-holdout",
+  "phase": "final-all-experiments-and-holdouts",
   "from": "2026-11-04T17:03:49.3735199Z",
-  "to": "2026-11-04T17:37:10.6942174Z",
-  "provider_usage_delta_usd": 0.300936806,
-  "saved_response_provider_usd": 0.300949,
-  "saved_steps": 472,
-  "llm_calls": 967,
-  "summary_calls": 15,
-  "difference_usd": -0.00001219400000002091,
+  "to": "2026-11-04T18:43:31.2820812Z",
+  "provider_usage_delta_usd": 0.546484881,
+  "saved_response_provider_usd": 0.546514,
+  "saved_steps": 1200,
+  "dialogs": 195,
+  "llm_calls": 2033,
+  "summary_calls": 35,
+  "missing_cost_steps": 0,
+  "captured_http_errors": 0,
+  "difference_usd": -0.000029119,
+  "both_rounded_to_cents_usd": 0.55,
+  "max_response_rounding_accumulation_usd": 0.0006,
+  "earlier_readings": [
+    {"at": "2026-11-04T17:37:10.6942174Z", "phase": "exploratory-before-holdout", "provider_delta_usd": 0.300936806, "response_sum_usd": 0.300949, "steps": 472},
+    {"at": "2026-11-04T18:41:49.5165738Z", "phase": "immediately-after-last-run", "provider_delta_usd": 0.543551031, "response_sum_usd": 0.546514, "steps": 1200}
+  ],
+  "billing_update_note": "With no further paid runs, provider usage increased between the immediate and final reading; final discrepancy is compatible with six-decimal response rounding.",
+  "attribution_assumption": "No other process uses the same key in this interval; close reconciliation supports but does not prove exclusivity.",
   "source": "https://openrouter.ai/api/v1/key",
   "account_totals_published": false
 }

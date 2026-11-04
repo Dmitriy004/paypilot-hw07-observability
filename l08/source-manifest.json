@@ -6,5 +6,10 @@
   "original_l05_sha256": "eeff1407ba34bedf1e25b66ed940fd6853023b4f4feb5eed7952121c03a89272",
   "source": "../paypilot-l05-multiturn/l05_dialogs.jsonl",
   "fixture_clock": "2026-09-15T10:00:00Z",
+  "runtime_code_hashes_match_checkout": {
+    "app/agent/loop.py": "86f16bfb53f07b36027a414d5bb83c38318d2ec0d6ffba95348924930290ce09",
+    "app/otel.py": "8139d8c950be2aae97c134bb4902b1a567f477c620ded5ff4a767462d401aaa0",
+    "app/agent/providers/openrouter_provider.py": "dfafb19b6b93f52c9f8df8b39f92d320ea83c5d2382aaaa4452f44825ec5eb04"
+  },
   "compatibility": "Original L05 invariant assertions are not supported by stock L03. Preserve original input in l08/legacy-l05.jsonl; sets/l05_dialogs.jsonl uses supported budget views with identical user turns, plus an empty-tool case and legitimate account control. Do not claim legacy invariant verdicts."
 }

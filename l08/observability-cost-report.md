@@ -1,18 +1,19 @@
 # PayPilot — Observability & Cost Report / ДЗ_7
 
-Статус: робочий звіт. B1–B4 і exploratory clean завершені; остаточні бюджети, незалежний clean-clone holdout, скріншот UI та підсумкова звірка витрат мають бути додані до здачі. Проміжні прогони не видаються за фінальні.
+Статус: локальні вимірювання завершені. Фінальний v2 clean — **7 з7 PASS**, lesson-08 — **5 з7 PASS**, FAIL рівно CONV-H04-BUDGET і COST-H06-EMPTY, як в окремому прогнозі до прогонів. V1 clean false-positive H03 і всі проміжні/негативні результати збережені. Публікація й здача — окремий наступний крок.
 
 | Поле | Значення |
 |---|---|
 | Система / версія | PayPilot shared stand `74f1995ca8e8e64e4526e374535c2c4e71a2bde1` |
 | Дата / seed clock | 2026-11-04 / `2026-09-15T10:00:00Z` |
-| Поточна модель агента | `anthropic/claude-haiku-5.5`, OpenRouter, reasoning off |
+| Модель агента у прогонах | `anthropic/claude-haiku-5.5`, OpenRouter, reasoning off |
 | Поточний тариф | input $0.10/M, output $0.50/M, cache-read $0.01/M, cache-write $0.125/M; prompt ≥100k має окремий дорожчий tier |
 | Модель порівняння | `google/gemini-2.5-flash`: input $0.30/M, output $2.50/M, cache-read $0.03/M, cache-write $0.0833333333/M |
 | Джерело тарифу | [OpenRouter API /models](https://openrouter.ai/api/v1/models), перевірено 2026-11-04; [snapshot](tariffs.json) |
 | Backend / інструменти | локальний Langfuse 4.69.0 + Phoenix; L03 `7d0f5e7`, L08 `666e496`; [manifest](source-manifest.json) |
 | Офіційні прогони | B4: 2 моделі ×2 сценарії ×2 умови ×5 =40 діалогів; B3: 2 умови ×5 =10 діалогів |
 | Власний набір | п'ять незмінених власних L05 turn lists як budget views, новий empty-result budget і легітимний account control; разом 7 кейсів, із них 6 бюджетних |
+| Фінальна перевірка | SHA256 `e9cf3e571e175b9c0d6c37a462032a229c7179ce3bfa35c00dbd66683e658d26`; 27 діалогів /182 кроки на профіль, чистий клон `c1d056d`; [протокол перевірки](holdout.json) |
 
 ## Слайд 1. Лічильник не є трейсом, а трейс не є рахунком
 
@@ -83,7 +84,7 @@ Langfuse API v4 працює через `/api/public/v2/observations`; стар�
 
 | Рівень | Вимір / розрахунок | Межа застосовності |
 |---|---|---|
-| Крок | B1 D14 повтори оплачуються за всіма спанами, а не самозвітом; конкретні step-рядки є в B4 results і raw | Одне повідомлення не дорівнює одному LLM call |
+| Крок | B1 clean Haiku run1 step1, request `ee0e152168794c3e`: **$0.000427** provider, **$0.000427355** тариф, **2 llm.call**, **2202.4ms** root | Одне повідомлення не дорівнює одному LLM call; D14 повтори теж оплачуються за всіма спанами |
 | Діалог | Haiku clean B1 median $0.000333, B2 $0.003228; по5 повторів | Це 2- і 7-крокові сценарії, не взаємозамінні одиниці |
 | Місяць | 800×20×(.8×.000333+.2×.003228) = **$14.592** на Haiku; Gemini: **$26.112** | Лише модельний inference, не hosting/Langfuse/storage/judge; не production billing forecast |
 | N користувачів | `C(N)=N×20×(.8×median_B1+.2×median_B2)`; Haiku `0.01824×N` USD | Лінійно за N лише при фіксованих довжині/міксі/кеші/дефектах |
@@ -146,13 +147,31 @@ Exploratory clean завершений: [звіт](../reports/l05_dialogs-clean-
 |---|---|---|---|
 | CONV-H01-BUDGET | tokens_total47517 | release/5 | clean median39597 +20%; відомий пропуск помірного D15 |
 | CONV-H02-BUDGET | tokens_total63449 | release/5 | median52874 +20% |
-| CONV-H03-BUDGET | tokens_total22834 | release/5 | median19028 +20% |
+| CONV-H03-BUDGET | **v2 tokens_total33306** | release/5 | combined10-clean median19032 +75%; допустима KB strategy має вищу ціну |
 | CONV-H04-BUDGET | tokens_total47027 | release/5 | median44787 +5%, окреме калібрування |
 | CONV-H05-BUDGET | tokens_total41135 | release/5 | median34279 +20% |
 | COST-H06-EMPTY | identical_tool_calls_max1 | daily/1 | Порожній результат не є приводом повторювати той самий tool call |
 | COST-CTRL-ACCOUNT | get_account | daily/1 | Легітимний функціональний контроль, не budget case |
 
-Фінальний set_hash `4c125924888f`; [конкретний прогноз](prediction-final.md) називає CONV-H04-BUDGET і COST-H06-EMPTY як очікувані FAIL lesson-08. Контрольні clean-clone прогони ще не виконані й не підміняються exploratory. Вихідний memory-invariant набір L05 збережено, але stock L03 його не виконує: не заявляю старі функціональні перевірки як зелені.
+V1 set_hash `4c125924888f`, [прогноз0d340b6](prediction-final.md): lesson-08 отримав очікувані **5 з7 PASS**, упали рівно H04/H06; clean отримав **6 з7**, неочікувано впав H03. [Clean v1](../reports/l05_dialogs-clean-20261104T182329.json), [lesson-08 v1](../reports/l05_dialogs-lesson-08-20261104T181529.json). Це **помилка clean прогнозу**, не «7/7».
+
+Причина H03 доведена трейсами: clean replay=false, active_defects порожній. У run1 лише eligibility,6 llm.call і18877 tokens; у run3 два knowledge lookups+eligibility,7 llm.call і30052 tokens. Медіана clean-v1 [18877,18755,30052,23151,26191] =23151>22834. Поріг недооцінив **нормальну retrieval variance**, а не знайшов D15. Докази: [run1 step1](evidence/20261104T181609.677227Z/000086.json), [run3 step1](evidence/20261104T181609.677227Z/000096.json), [аналіз і нова калібровка](calibration-v2.md).
+
+У v2 змінено **лише H03 budget**: спільна медіана10 clean samples19032 +75%=33306, що на10.8% вище спостереженого clean max30052. Це широкий guard грубої ціни; він пропускає помірний D15 — чутливий H04 з47027 не послаблено. Регресійний тест реального clean-v1 прикладу пройшов RED→GREEN, а H04 replay досі FAIL за graderом. V1 незмінний у commit d0f8b34 і звітах; його дані тепер exploratory для v2.
+
+Фінальний v2 set_hash **`e9cf3e571e17`**, [окремий прогнозc1d056d](prediction-v2.md) з точними FAIL IDs H04/H06. Коміт створено о18:27:14 UTC, перший новий /chat у raw — о18:27:36 UTC. Нові повні holdout прогони виконано на чистому клоні цього коміту, без подальшої зміни набору; між умовами змінено **лише profile**. [Clean v2](../reports/l05_dialogs-clean-20261104T184110.json): exit0, **7 з7**; [lesson-08 v2](../reports/l05_dialogs-lesson-08-20261104T183406.json): exit1, **5 з7**, без ERROR. Прогноз усіх7 case verdicts справдився в обох умовах. [Manifest перевірки](holdout.json).
+
+| Фінальний кейс v2 | Clean: median / рахунок під порогом | lesson-08: median / рахунок під порогом | Case verdict clean / defect |
+|---|---|---|---|
+| CONV-H01-BUDGET, tokens≤47517 | 39984;5 з5 | 43400;4 з5 | PASS / PASS |
+| CONV-H02-BUDGET, tokens≤63449 | 51421;5 з5 | 54821;4 з5 | PASS / PASS |
+| CONV-H03-BUDGET, tokens≤33306 | 19057;5 з5 | 19568;5 з5 | PASS / PASS |
+| CONV-H04-BUDGET, tokens≤47027 | 44583;5 з5 | 54124;0 з5 | PASS / **FAIL D15** |
+| CONV-H05-BUDGET, tokens≤41135 | 39857;4 з5 | 37659;5 з5 | PASS / PASS |
+| COST-H06-EMPTY, identical≤1 | max1;1 з1 | max8;0 з1 | PASS / **FAIL D14** |
+| COST-CTRL-ACCOUNT, get_account | 1 з1 виклик присутній | 1 з1 виклик присутній | PASS / PASS |
+
+Release token verdict — перевірка **медіани п'яти цілих діалогів**, а не вимога5/5 індивідуальних проходжень. Тому H05 clean лишається PASS із4/5; окремий run1 перевищив поріг (42243>41135), що чесно показує залишкову варіативність. D14 daily — один запуск з перевіркою однакових name+arguments, не статистична оцінка частоти дефекту. Вихідний memory-invariant набір L05 збережено, але stock L03 його не виконує: не заявляю старі функціональні перевірки як зелені.
 
 **Пороги перезняти:** tokens_total кожного budget-view і step6 input threshold B2 при зміні моделі; latency перед введенням latency gate; USD forecast після тарифу/кеш-політики. Identical calls — поведінковий інваріант, але теж потребує легітимних freshness/retry controls.
 
@@ -164,8 +183,12 @@ Exploratory clean завершений: [звіт](../reports/l05_dialogs-clean-
 | Неправомірний write | create_dispute/send_statement уже змінюють зовнішній стан; «оператор закриє» не є зворотністю дії агента | Cost/retry тести цього не доводять | rules engine і фактичний стан | Не реалізовано новий blocking guard, тож не вигадую його latency; перед релізом потрібен вимір і legitimate breakage control |
 | Рідкісна дорога петля / інший turn mix | Медіана маскує tail і нові сценарії | D14 case, ranges B4 | traces/provider | Частота в production і p95/p99; у Gemini outlier збережено |
 
+Це не лише абстрактна сліпа зона: у clean-v1 H01 run5 step6 після репліки «240 euro, as I said at the start.» запит `3a022fc900ed4191`, span `tool.create_dispute/849171df2d2f4f8d` повернув `{"dispute_id":1,"status":"open"}`, при цьому budget case PASS. [Первинний трейс](evidence/20261104T181609.677227Z/000034.json). Наявність/правильність згоди цей grader не оцінює; такий PASS не є дозволом production-релізу. Потрібні окремі consent/state/engine guards для незворотного write, а не зміна cost threshold.
+
 Відтворювані команди й походження кейсів — у [README](../README.md).
 
-Проміжна provider-delta звірка **до holdout**: [provider-reconciliation.json](provider-reconciliation.json). За17:03:49–17:37:10 UTC власні472 відповіді дали967 llm.call +15 summary calls; сума округлених provider costs **$0.300949**, дельта usage API провайдера **$0.300936806**. Різниця **−$0.000012194** менша за можливе накопичення округлення472 відповідей до6 знаків; до цента обидві суми **$0.30**. Публікується тільки витрата цього експерименту, не баланс чи загальні витрати аккаунта. Attribution передбачає, що в це вікно тим самим ключем не користувався інший процес; близька звірка це підтримує, але не доводить ексклюзивність.
+Підсумкова provider-delta звірка: [provider-reconciliation.json](provider-reconciliation.json). За17:03:49–18:43:31 UTC **усі195 діалогів /1200 відповідей** (включно exploratory, невдалим v1 і фінальним v2) дали **2033 llm.call +35 summary calls**; сума округлених provider costs **$0.546514**, дельта usage API провайдера **$0.546484881**. Немає збережених HTTP ERROR чи відповідей із невідомою ціною. Різниця **−$0.000029119** менша за можливе накопичення округлення1200 відповідей до6 знаків ($0.0006); до цента обидві суми **$0.55**, нижче погодженого $1. Перше зчитування одразу після останнього прогону показувало лише $0.543551031; без нових платних запитів usage згодом оновився — обидва зчитування збережено, а затримку не приховано.
 
-Контрольні clean-clone прогони та підсумкова звірка після них ще не заявлені завершеними. Стенд повернуто до початкової .env-конфігурації (clean/OpenAI, model default); для продовження потрібне тимчасове повернення OpenRouter за тим самим протоколом. Код/набір/докази підготовлені до staging, але технічний коміт і вхід користувача у Langfuse ще очікують погодження/виконання.
+Публікується тільки витрата цього експерименту, не баланс чи загальні витрати аккаунта. Attribution передбачає, що в це вікно тим самим ключем не користувався інший процес; близька звірка це підтримує, але не доводить ексклюзивність. Обмежувач $0.99 перевіряє **перед** новим запитом уже відому витрату; він не гарантує абсолютну стелю вартості невідомого наступного запиту. Фактичний ліміт у цій роботі дотримано за незалежною звіркою.
+
+Після вимірювань стенд повернуто до початкової .env-конфігурації: health підтвердив clean/OpenAI, без active_defects, trace_content=true; .env не редагувався. Повторне відтворення потребує задокументованого в README OpenRouter-стенду. Прогнози й технічні зміни закомічено локально за дозволом користувача; push, публічний репозиторій і здача ще не виконані й не видаються за завершені.

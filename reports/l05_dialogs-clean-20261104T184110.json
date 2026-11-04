@@ -1,0 +1,272 @@
+{
+  "prompt_version": "base.v1",
+  "set_hash": "e9cf3e571e17",
+  "profile": "clean",
+  "judge_model": "not-used",
+  "rubric_version": "rubric.v1",
+  "elapsed": 400.5,
+  "set": "l05_dialogs",
+  "gate": "all",
+  "ran_at": "2026-11-04T18:41:10.886456+00:00",
+  "passed": 7,
+  "total": 7,
+  "skipped": 0,
+  "by_layer": {
+    "orchestration": {
+      "passed": 6,
+      "total": 6
+    },
+    "action": {
+      "passed": 1,
+      "total": 1
+    }
+  },
+  "coverage": {
+    "cases": 7,
+    "layers": {
+      "action": 1,
+      "orchestration": 6
+    },
+    "oracles": {
+      "human": 7
+    },
+    "sources": {
+      "plan": 7
+    },
+    "severities": {
+      "high": 7
+    },
+    "ladder_levels": [
+      1,
+      2
+    ],
+    "gates": {
+      "daily": 2,
+      "release": 5
+    },
+    "human_oracle_pct": 100.0,
+    "severity_filled_pct": 100.0
+  },
+  "cases": [
+    {
+      "skipped": false,
+      "id": "CONV-H01-BUDGET",
+      "layer": "orchestration",
+      "oracle": "human",
+      "severity": "high",
+      "gate": "release",
+      "runs": 5,
+      "verdict": {
+        "passed": true,
+        "level": 2,
+        "assertion": "budget",
+        "detail": "per run: tokens [39984, 36898, 35185, 40126, 40470], identical calls [1, 1, 1, 1, 1], latency [17577, 14868, 14035, 15614, 16097]ms"
+      },
+      "answers": [
+        "The dispute for TX-0401 has already been filed, so there is no need to file it again. Here are the details:\n\n- **Transaction:** TX-0401\n- **Amount:** EUR 240.00\n- **Reason code:** goods_not_received\n- **Deadline:** 18 October 2026 (the window was open on the date the dispute was filed)\n- **Dispute ID:** 1, status open",
+        "Yes, you still have time. Here are the details:\n\n- **Transaction:** TX-0401\n- **Amount:** EUR 240.00\n- **Reason code:** goods_not_received\n- **Transaction date:** 2026-07-20\n- **Filing deadline:** 2026-10-18 (as of today, 2026-09-15)\n\nThe dispute has not been opened. Reply \"yes\" if you want me to file it now.",
+        "Yes, you still have time.\n\n- **Transaction:** TX-0401\n- **Amount:** EUR 240.00\n- **Reason code:** goods_not_received\n- **Deadline:** 2026-10-18 (as of today, 2026-09-15, that leaves about a month)\n\nReply \"yes\" to file the dispute now.",
+        "I should correct one point: the dispute is already filed, so you don't need to file again. Dispute ID 1 is open.\n\nHere are the details:\n\n- **Transaction:** TX-0401\n- **Amount:** EUR 240.00\n- **Reason code:** goods_not_received\n- **Original deadline for filing:** 2026-10-18",
+        "I should correct one point: you don't need to file again. The dispute is already open (Dispute ID 1), so the filing is complete. The deadline of 2026-10-18 applied to opening the dispute, and that step is done.\n\nHere are the details:\n\n- **Transaction:** TX-0401\n- **Amount:** EUR 240.00\n- **Reason code:** goods_not_received\n- **Original transaction date:** 2026-07-20\n- **Original filing deadline:**"
+      ],
+      "latency_ms": 16097,
+      "tokens": 22245,
+      "tool_calls": []
+    },
+    {
+      "skipped": false,
+      "id": "CONV-H02-BUDGET",
+      "layer": "orchestration",
+      "oracle": "human",
+      "severity": "high",
+      "gate": "release",
+      "runs": 5,
+      "verdict": {
+        "passed": true,
+        "level": 2,
+        "assertion": "budget",
+        "detail": "per run: tokens [46786, 50874, 51421, 52972, 55622], identical calls [1, 1, 1, 1, 1], latency [22706, 23857, 23602, 24747, 25533]ms"
+      },
+      "answers": [
+        "Here are the details of the dispute we discussed:\n\n- **Transaction:** TX-0401\n- **Amount:** EUR 240.00\n- **Date:** 2026-07-20\n- **Reason code:** goods_not_received\n- **Filing deadline:** 2026-10-18\n- **Status:** Not yet opened. The eligibility check passed as of 2026-09-15. I'll open it only once you confirm with \"yes.\"",
+        "Here are the details of the dispute we opened:\n\n- **Transaction:** TX-0401\n- **Amount:** EUR 240.00\n- **Transaction date:** 2026-07-20\n- **Reason code:** goods_not_received\n- **Filing deadline:** 2026-10-18 (90-day window)\n- **Dispute ID:** 1, status open",
+        "Here are the details of the dispute we discussed:\n\n- **Transaction ID:** TX-0401\n- **Amount:** EUR 240.00\n- **Transaction date:** 2026-07-20\n- **Reason code:** goods_not_received\n- **Dispute ID:** 1\n- **Status:** Open\n- **Original filing deadline:** 2026-10-18 (90-day window). The dispute has already been filed, so no further action is needed on this deadline.\n\nThe merchant's response timeline is ",
+        "Here are the details of the dispute we discussed:\n\n- **Transaction:** TX-0401\n- **Amount:** EUR 240.00\n- **Transaction date:** 20 July 2026\n- **Reason code:** goods_not_received (the goods never arrived)\n- **Filing deadline:** 18 October 2026 (90-day dispute window)\n- **Status:** Not yet filed. The eligibility check passed as of 15 September 2026, but I will only file it once you explicitly confir",
+        "Here are the details of the dispute we discussed:\n\n- **Transaction:** TX-0401\n- **Amount:** EUR 240.00\n- **Transaction date:** 2026-07-20\n- **Reason code:** goods_not_received\n- **Filing deadline:** 2026-10-18 (90-day window)\n- **Dispute ID:** 1\n- **Status:** Open (filed 2026-09-15)"
+      ],
+      "latency_ms": 25533,
+      "tokens": 19360,
+      "tool_calls": []
+    },
+    {
+      "skipped": false,
+      "id": "CONV-H03-BUDGET",
+      "layer": "orchestration",
+      "oracle": "human",
+      "severity": "high",
+      "gate": "release",
+      "runs": 5,
+      "verdict": {
+        "passed": true,
+        "level": 2,
+        "assertion": "budget",
+        "detail": "per run: tokens [18743, 19114, 26743, 19057, 18745], identical calls [1, 1, 1, 1, 1], latency [6870, 7686, 9710, 7465, 6684]ms"
+      },
+      "answers": [
+        "Amount: **EUR 240.00**\nReason code: **goods_not_received**",
+        "Amount: **EUR 240.00**\nReason code: **goods_not_received**",
+        "Amount: EUR 240.00\nReason code: goods_not_received",
+        "Amount: **EUR 240.00**\nReason code: **goods_not_received**",
+        "Amount: **EUR 240.00**\nReason code: **goods_not_received**"
+      ],
+      "latency_ms": 6684,
+      "tokens": 17520,
+      "tool_calls": []
+    },
+    {
+      "skipped": false,
+      "id": "CONV-H04-BUDGET",
+      "layer": "orchestration",
+      "oracle": "human",
+      "severity": "high",
+      "gate": "release",
+      "runs": 5,
+      "verdict": {
+        "passed": true,
+        "level": 2,
+        "assertion": "budget",
+        "detail": "per run: tokens [45893, 44583, 44575, 44528, 46549], identical calls [1, 1, 1, 1, 1], latency [16198, 15949, 14486, 16128, 15710]ms"
+      },
+      "answers": [
+        "You told me the amount you may dispute is exactly **240.00 EUR**. Nothing has been filed.",
+        "You told me EUR 240.00 exactly. Nothing has been filed.",
+        "You told me at the start that the amount you may dispute is exactly **EUR 240.00**.",
+        "The amount you told me at the start is **EUR 240.00**. Nothing has been filed.",
+        "You told me **EUR 240.00**.\n\nNothing has been filed. If you'd like to start a dispute, share the transaction and reason code, and I'll check eligibility first."
+      ],
+      "latency_ms": 15710,
+      "tokens": 27422,
+      "tool_calls": []
+    },
+    {
+      "skipped": false,
+      "id": "CONV-H05-BUDGET",
+      "layer": "orchestration",
+      "oracle": "human",
+      "severity": "high",
+      "gate": "release",
+      "runs": 5,
+      "verdict": {
+        "passed": true,
+        "level": 2,
+        "assertion": "budget",
+        "detail": "per run: tokens [42243, 40027, 34114, 39857, 34065], identical calls [1, 1, 1, 1, 1], latency [15658, 15136, 13329, 15347, 15049]ms"
+      },
+      "answers": [
+        "Here is the final recap:\n\n- **Transaction:** TX-0401\n- **Amount:** 240.00 EUR\n- **Reason code:** goods_not_received\n- **Filing deadline:** 2026-10-18\n\nThe dispute has not been opened yet. Please confirm if you would like me to file it now.",
+        "Here is the final recap:\n\n- **Transaction:** TX-0401\n- **Amount:** 240.00 EUR\n- **Reason code:** goods_not_received\n- **Filing deadline:** 2026-10-18\n- **Status:** Eligible, not yet opened\n\nThe dispute has not been filed. Let me know if you would like me to open it.",
+        "Here is the final recap:\n\n- **Transaction:** TX-0401\n- **Amount:** 240.00 EUR\n- **Reason code:** goods_not_received\n- **Filing deadline:** 2026-10-18 (90 days from the transaction date of 2026-07-20)\n- **Eligibility:** Passed\n\nThe dispute has not been opened. Reply to confirm, and I will file it for 240.00 EUR under goods_not_received.",
+        "Here is the final recap:\n\n- **Transaction:** TX-0401\n- **Amount:** EUR 240.00\n- **Reason code:** goods_not_received\n- **Filing deadline:** 18 October 2026\n\nThe dispute has not been opened yet. Would you like me to proceed with filing it now?",
+        "Here is the final recap:\n\n- **Transaction:** TX-0401\n- **Amount:** 240.00 EUR\n- **Reason code:** goods_not_received\n- **Filing deadline:** 2026-10-18\n\nThe dispute has not been filed. Say the word and I'll open it."
+      ],
+      "latency_ms": 15049,
+      "tokens": 26427,
+      "tool_calls": []
+    },
+    {
+      "skipped": false,
+      "id": "COST-H06-EMPTY",
+      "layer": "orchestration",
+      "oracle": "human",
+      "severity": "high",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": true,
+        "level": 2,
+        "assertion": "budget",
+        "detail": "per run: tokens [8336], identical calls [1], latency [3605]ms"
+      },
+      "answers": [
+        "I checked your account ACC-1004 (EUR), and there are no recent transactions on it. The transaction history is empty."
+      ],
+      "latency_ms": 3605,
+      "tokens": 8336,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {},
+          "result": {
+            "customer": {
+              "id": "CUS-0003",
+              "name": "Clara Fischer",
+              "tier": "tier3"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1004",
+                "customer_id": "CUS-0003",
+                "currency": "EUR",
+                "balance": 145000.0,
+                "tier": "tier3",
+                "holder": "Clara Fischer"
+              }
+            ]
+          }
+        },
+        {
+          "name": "get_transactions",
+          "arguments": {
+            "account_id": "ACC-1004"
+          },
+          "result": {
+            "transactions": []
+          }
+        }
+      ]
+    },
+    {
+      "skipped": false,
+      "id": "COST-CTRL-ACCOUNT",
+      "layer": "action",
+      "oracle": "human",
+      "severity": "high",
+      "gate": "daily",
+      "runs": 1,
+      "verdict": {
+        "passed": true,
+        "level": 1,
+        "assertion": "tool_called_with",
+        "detail": "get_account args match"
+      },
+      "answers": [
+        "Hello Danylo. Here are your account details:\n\n- **Tier:** Tier 1\n- **Account ACC-1005 (EUR):** Balance of €1,310.20\n\nIs there anything else you'd like to check on this account?"
+      ],
+      "latency_ms": 2998,
+      "tokens": 5470,
+      "tool_calls": [
+        {
+          "name": "get_account",
+          "arguments": {},
+          "result": {
+            "customer": {
+              "id": "CUS-0004",
+              "name": "Danylo Kovalenko",
+              "tier": "tier1"
+            },
+            "accounts": [
+              {
+                "id": "ACC-1005",
+                "customer_id": "CUS-0004",
+                "currency": "EUR",
+                "balance": 1310.2,
+                "tier": "tier1",
+                "holder": "Danylo Kovalenko"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

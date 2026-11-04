@@ -64,6 +64,8 @@ def summarize_dialog(records: list[dict]) -> dict:
         result[key] = sum(row[key] for row in rows)
     for key in ("usage_usd", "provider_usd"):
         result[key] = sum(row[key] for row in rows) if all(row[key] is not None for row in rows) else None
+    result["provider_usd_known"] = sum(row["provider_usd"] for row in rows if row["provider_usd"] is not None)
+    result["missing_cost_steps"] = sum(row["provider_usd"] is None for row in rows)
     return result
 
 
@@ -84,8 +86,11 @@ def aggregate(evidence_dir: Path) -> dict:
         result = summarize_dialog(sorted(records, key=lambda row: row["sequence"]))
         result.update(batch=batch, label=label, run=run)
         dialogs.append(result)
+    missing = sum(d["missing_cost_steps"] for d in dialogs)
+    known = sum(d["provider_usd_known"] for d in dialogs)
     return {"dialogs": dialogs, "saved_steps": sum(d["steps"] for d in dialogs),
-            "provider_usd": sum(d["provider_usd"] or 0 for d in dialogs),
+            "provider_usd": known if not missing else None,
+            "provider_usd_known": known, "missing_cost_steps": missing,
             "llm_calls": sum(d["model_calls"] for d in dialogs),
             "summary_calls": sum(d["summary_calls"] for d in dialogs)}
 
