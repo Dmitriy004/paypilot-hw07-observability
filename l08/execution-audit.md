@@ -55,5 +55,4 @@ Final: Ruling: absolute .99 pre-call spend guarantee set aside by reviewer — k
 Final: Ruling: live tariffs/account usage/restoration set aside by offline reviewer — executor verified provider model prices, final key-usage delta and clean/OpenAI health; publish sanitized evidence, not account totals, and do not claim the reviewer independently accessed those services — cost if wrong: later provider changes or delayed billing could alter future costs; recorded reconciliation is point-in-time.
 Final: minor (deferred): none.
 Task 5: complete (commits c1d056d..c1d056d, tests: C:/Users/Admin/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe -m unittest discover -s l08 -p test_*.py -v → OK)
-
-
+Final verification note: first ad hoc summary equality check used Windows default cp1251 rather than UTF-8, changing the decoded euro symbol and failing string equality while all numbers matched. Explicit UTF-8 recomputation is exactly equal, including full answers. Production capture/aggregate already use explicit UTF-8; no source or evidence repair was needed. Fix commit0fddc1f contains the24/24-tested trace-persistence change; publication remains pending. Whitespace-only audit cleanup follows.
