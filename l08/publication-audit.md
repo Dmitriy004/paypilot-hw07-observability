@@ -17,3 +17,5 @@ The first push attempt was blocked before execution because complete traces can 
 ## Authorization gate
 
 The repository was created publicly but remained empty when the first push was blocked. Before uploading this payload, obtain the user's specific confirmation to publish the full synthetic traces, reports and screenshot at the destination above. The GoIT submission sends the public repository URL, not private local files.
+
+Confirmed: the user answered «да» to the explicit request to publish the reports, screenshot and1200 complete synthetic PayPilot traces in this public repository, then press «Відправити домашнє завдання» in GoIT. This confirmation covers the named payload and destination; secrets, `.env` and private account snapshots remain excluded.
