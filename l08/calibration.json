@@ -2,7 +2,7 @@
   "model": "anthropic/claude-haiku-5.5",
   "reasoning": "off",
   "clock": "2026-09-15T10:00:00Z",
-  "phase": "exploratory-only",
+  "phase": "v1-exploratory-with-followup-holdout",
   "source_set_hash": "7b3d2a38ceac",
   "final_set_sha256": "4c125924888fd3140a2a9d6f5117fb12f8a541100c4994ddda2237843d2e5182",
   "clean_report": "reports/l05_dialogs-clean-20261104T172714.json",
@@ -41,5 +41,7 @@
     "CONV-H04-BUDGET":47027,
     "CONV-H05-BUDGET":41135
   },
-  "holdout_started": false
+  "holdout_started": true,
+  "holdout_reports": ["reports/l05_dialogs-lesson-08-20261104T181529.json", "reports/l05_dialogs-clean-20261104T182329.json"],
+  "holdout_result": "v1 clean 6/7; H03 false positive. See calibration-v2.md for separately forecast and revalidated revision."
 }

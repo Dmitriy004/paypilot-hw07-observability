@@ -20,7 +20,11 @@
 
 C-07 / B2 clean Haiku, session `ea8342b9d591`: **7 запитів agent.request**, 12 generation-спанів, 25 observations.
 Langfuse Total Cost за API = **$0.003878159998**; сума округленого `usage.provider_cost_usd` семи відповідей = **$0.003877**. Різниця $0.000001159998 сумісна з округленням кожної відповіді до шести знаків.
-Доказ: [langfuse-session.json](langfuse-session.json), запити `63a9197eb2a64c9d` … `cfe1d5d759524f7d`. Скріншот списку семи кроків і Total Cost буде додано після входу користувача в локальний Langfuse; API-доказ не підміняє обов'язковий скріншот.
+Доказ: [langfuse-session.json](langfuse-session.json), запити `63a9197eb2a64c9d` … `cfe1d5d759524f7d`.
+
+![Сім кроків сесії C-07 і сумарна вартість у Langfuse](langfuse-session.png)
+
+У Langfuse4.69 семишаговий список знаходиться зліва, а Total Cost у шапці округлено до **$0.004** (accessibility description: exact **$0.003878**). Особисті вкладки/закладки не потрапили до скріншота. UI duration17.36s не використовую як суму server latency: для цієї сесії raw root durations сумарно **19.0517s**, а інтервал від першого root start до останнього root end **19.2134s**. У порівняльних таблицях нижче послідовно застосовано саме суму root duration, не змішані визначення часу.
 
 Langfuse API v4 працює через `/api/public/v2/observations`; старий `/api/public/traces` повертає events_only error. Це обмеження API, а не відсутність експорту: 25 observations цієї сесії доступні через v2.
 Для точного імені `anthropic/claude-haiku-5.5` додано локальне model definition з regex `(?i)^anthropic/claude-haiku-5[.]5$` та всіма exclusive usage buckets. Сам `stand.cost_usd` у metadata не означає автоматичне заповнення Langfuse Total Cost.
@@ -70,8 +74,8 @@ Langfuse API v4 працює через `/api/public/v2/observations`; стар�
 Сліпі зони:
 
 - `usage.cost_usd` при D14 не бачить усі повтори: медіана B1 $0.000417 проти фактичних $0.001423. У Gemini найгірший виміряний B1 мав 88 однакових tool calls і ціну $0.056162; цей outlier не викинуто.
-- Langfuse без відповідного model definition не може сам вивести коректну ціну лише з імені; metadata `stand.cost_usd` і розрахований Total Cost — різні поля.
-- Input/output-only definition пропускає `input_cached_tokens`, `input_cache_creation_tokens`, `output_reasoning_tokens`. У цьому наборі reasoning off; не стверджую, що виміряв економію reasoning. Суми reasoning вже входять до output, повторно їх не додаю.
+- Langfuse без відповідного model definition не може сам вивести коректну ціну лише з імені; metadata `stand.cost_usd` і розрахований Total Cost — різні поля. Перевірено обидві сторінки187+ моделей: жоден вбудований Haiku pattern не збігається з точним OpenRouter ім'ям `anthropic/claude-haiku-5.5`; збігається наше project definition. Не видаю це за вимір live NULL до налаштування — це перевірка конфігурації та її пояснення.
+- Input/output-only definition пропускає `input_cached_tokens`, `input_cache_creation_tokens`, `output_reasoning_tokens`. Конкретний приклад: generation span `6e7538b5a9cddf3c`, trace `23be2e731024403be82097782f99ba83` у збереженій Langfuse-сесії:3695 fresh input +2513 cached +208 output; повна ціна **$0.00049863**, input/output-only **$0.00047350**, недораховано **$0.00002513** cache-read. У цьому наборі reasoning off; не стверджую, що виміряв економію reasoning. Суми reasoning вже входять до output, повторно їх не додаю.
 - `agent.summarize` — оплачуваний generation. Kit $trace рахує тільки llm.call; root usage також не є повним рахунком. B3 median summary tokens: clean1811, defect1587; повний provider ratio1.253×, а llm.call-only ratio1.492×.
 - Gemini cache-write overlap і поточний тариф враховано окремо; 1481 cache-write token реально зустрівся у B4. Старе значення factor .3778 у kit/stand не можна вважати актуальним прайсом. Найдовший prompt офіційних вимірів був 8017 tokens: дорогий Haiku tier перевірений тестом, але не навантажувальним експериментом ≥100k.
 

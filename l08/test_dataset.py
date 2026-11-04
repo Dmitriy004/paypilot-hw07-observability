@@ -7,6 +7,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from loader import load
+import runner
 
 
 class DatasetTests(unittest.TestCase):
@@ -34,6 +35,22 @@ class DatasetTests(unittest.TestCase):
             budget = cases[case["id"] + "-BUDGET"]
             self.assertEqual(budget["turns"], case["turns"])
             self.assertGreaterEqual(len(budget["turns"]), 5)
+
+    def test_budget_preserves_observed_legitimate_retrieval_variants(self):
+        # Real clean-v1 holdout: direct eligibility vs optional knowledge-base lookups.
+        # Mutation caught: a limit below ordinary clean median rejects legitimate work.
+        case = next(c for c in load(ROOT / "sets/l05_dialogs.jsonl") if c["id"] == "CONV-H03-BUDGET")
+        results = [{"dialog_tokens": n, "step_traces": [], "latency_ms": 0,
+                    "answer": "240.00 EUR, goods_not_received", "trace": {}, "usage": {}}
+                   for n in [18877, 18755, 30052, 23151, 26191]]
+        self.assertTrue(runner.evaluate(case, results).passed)
+
+    def test_sensitive_budget_still_rejects_observed_replay(self):
+        case = next(c for c in load(ROOT / "sets/l05_dialogs.jsonl") if c["id"] == "CONV-H04-BUDGET")
+        results = [{"dialog_tokens": n, "step_traces": [], "latency_ms": 0,
+                    "answer": "240.00 EUR", "trace": {}, "usage": {}}
+                   for n in [53722, 54198, 54587, 52889, 53261]]
+        self.assertFalse(runner.evaluate(case, results).passed)
 
 
 if __name__ == "__main__":
